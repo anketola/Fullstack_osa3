@@ -4,6 +4,8 @@ const url = process.env.MONGODB_URI
 
 console.log('connecting to', url)
 
+mongoose.set('useFindAndModify', false)
+
 mongoose.connect(url, { useNewUrlParser: true })
   .then(result => {
     console.log('connected to MongoDB')
@@ -26,4 +28,3 @@ personSchema.set('toJSON', {
 })
 
 module.exports = mongoose.model('Person', personSchema)
-
