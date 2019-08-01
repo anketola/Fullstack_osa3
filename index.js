@@ -1,8 +1,13 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const morgan = require('morgan')
+morgan.token('reqBody', (req, res) => JSON.stringify(req.body))
 
 app.use(bodyParser.json())
+app.use(morgan('tiny')) 
+app.use(morgan(':method :url :reqBody :status :res[content-length] - :response-time ms'))
+
 
 const newId = () => {
   return Math.floor(Math.random() * 10000)
