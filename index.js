@@ -28,7 +28,7 @@ app.get('/info', (req, res) => {
     res.send(`<p>Phonebook has info for ${allPersons.length} people. <p><br /> ${new Date}`))
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const body = request.body
   
   const person = new Person ({
@@ -36,8 +36,11 @@ app.post('/api/persons', (request, response) => {
     number: body.number,
   })
 
-  person.save().then(savedPerson => {
-    response.json(savedPerson.toJSON())
+  person
+    .save()
+    .then(savedPerson => savedPerson.toJSON())
+    .then(savedAndFormattedPerson => {
+      response.json(savedAndFormattedPerson)
   })
   .catch(error => next(error))
 })
@@ -93,11 +96,13 @@ app.use(unknownEndpoint)
 
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
-
+  
   if (error.name === 'CastError' && error.kind == 'ObjectId') {
     return response.status(400).send({ error: 'malformatted id' })
-  } 
-
+  } else if (error.name === 'ValidationError') {
+    console.log("haara2")
+    return response.status(400).json({ error: error.message })
+  }
   next(error)
 }
 
