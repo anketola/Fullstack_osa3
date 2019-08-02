@@ -10,7 +10,7 @@ morgan.token('reqBody', (req, res) => JSON.stringify(req.body))
 app.use(express.static('build'))
 app.use(bodyParser.json())
 app.use(cors())
-app.use(morgan('tiny')) 
+app.use(morgan('tiny'))
 app.use(morgan(':method :url :reqBody :status :res[content-length] - :response-time ms'))
 
 
@@ -25,12 +25,12 @@ app.get('/', (req, res) => {
 app.get('/info', (req, res) => {
   Person.find({})
     .then(allPersons =>
-    res.send(`<p>Phonebook has info for ${allPersons.length} people. <p><br /> ${new Date}`))
+      res.send(`<p>Phonebook has info for ${allPersons.length} people. <p><br /> ${new Date}`))
 })
 
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
-  
+
   const person = new Person ({
     name: body.name,
     number: body.number,
@@ -41,8 +41,8 @@ app.post('/api/persons', (request, response, next) => {
     .then(savedPerson => savedPerson.toJSON())
     .then(savedAndFormattedPerson => {
       response.json(savedAndFormattedPerson)
-  })
-  .catch(error => next(error))
+    })
+    .catch(error => next(error))
 })
 
 
@@ -96,11 +96,11 @@ app.use(unknownEndpoint)
 
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
-  
+
   if (error.name === 'CastError' && error.kind == 'ObjectId') {
     return response.status(400).send({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
-    console.log("haara2")
+    console.log('haara2')
     return response.status(400).json({ error: error.message })
   }
   next(error)
